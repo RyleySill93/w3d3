@@ -29,4 +29,6 @@ class User < ActiveRecord::Base
     Proc.new { distinct },
     through: :visits,
     source: :urls
+
+    
 end

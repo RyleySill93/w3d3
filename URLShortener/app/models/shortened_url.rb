@@ -33,6 +33,15 @@ class ShortenedUrl < ActiveRecord::Base
     through: :visits,
     source: :user
 
+  has_many :taggings,
+    primary_key: :id,
+    foreign_key: :url_id,
+    class_name: :Tagging
+
+  has_many :topics,
+    through: :taggings,
+    source: :topic
+
   def self.random_code
     random_number = SecureRandom.urlsafe_base64
     while ShortenedUrl.exists?(short_url: random_number)
@@ -41,7 +50,7 @@ class ShortenedUrl < ActiveRecord::Base
     random_number
   end
 
-  def self.record_url(user, long_url)
+  def self.record_url!(user, long_url)
     ShortenedUrl.create!(
     long_url: long_url,
     short_url: ShortenedUrl.random_code,
